@@ -11,7 +11,7 @@ from dotenv import load_dotenv
 from bs4 import BeautifulSoup
 from curl_cffi import requests
 from openai import OpenAI
-from fastapi import FastAPI, HTTPException, BackgroundTasks
+from fastapi import FastAPI, HTTPException, BackgroundTasks, Request
 from pydantic import BaseModel
 
 print("test")
@@ -39,6 +39,9 @@ PROXY_PASS = os.getenv("PROXY_PASS")
 PROXIES = []
 if PROXY_USER and PROXY_PASS:
     PROXIES.append(f"http://{PROXY_USER}:{PROXY_PASS}@gate.dataimpulse.com:8234")
+
+SUPABASE_URL = os.getenv("SUPABASE_URL")
+SUPABASE_KEY = os.getenv("SUPABASE_KEY")
 
 client = OpenAI(api_key=OPENAI_API_KEY)
 session = requests.AsyncSession()
@@ -239,6 +242,22 @@ def clean_html_to_text(html: str) -> str:
         script_or_style.decompose()
     return soup.get_text(separator="\n", strip=True)
 
+async def log_to_supabase_task(log_payload: dict):
+    if not SUPABASE_URL or not SUPABASE_KEY:
+        return
+    headers = {
+        "apikey": SUPABASE_KEY,
+        "Authorization": f"Bearer {SUPABASE_KEY}",
+        "Content-Type": "application/json",
+        "Prefer": "return=minimal"
+    }
+    endpoint = f"{SUPABASE_URL}/rest/v1/GeneralPythonScrapper"
+    try:
+        async with requests.AsyncSession() as supa_session:
+            await supa_session.post(endpoint, json=log_payload, headers=headers, timeout=10)
+    except Exception as e:
+        logger.error(f"Failed to log to Supabase: {e}")
+
 async def extract_job_details_openai(url: str) -> dict:
     async with get_semaphore():
         raw_html = ""
@@ -420,19 +439,49 @@ async def health_check():
     return {"status": "online", "timestamp": time.time()}
 
 @app.post("/extract", response_model=Union[JobExtractionResponse, CombinedExtractionResponse])
-async def extract_openai_handler(payload: UnifiedJobRequest, background_tasks: BackgroundTasks):
+async def extract_openai_handler(request: Request, payload: UnifiedJobRequest, background_tasks: BackgroundTasks):
+    ip = request.client.host if request.client else "unknown"
+    device = request.headers.get("user-agent", "unknown")
+    answered_to = payload.webhook_url if payload.webhook_url else "direct_response"
+
     urls = payload.target_urls
     if not urls:
         raise HTTPException(status_code=400, detail="Missing target URL(s). Provide 'url' string/array or 'urls' array.")
 
     if len(urls) == 1:
         result = await extract_job_details_openai(urls[0])
+        
+        log_payload = {
+            "ip": ip,
+            "device": device,
+            "answered_to": answered_to,
+            "scraped_url": urls[0],
+            "model_used": "openai",
+            "is_success": result.get("error") is None,
+            "full_result": json.dumps(result, ensure_ascii=False) if result.get("error") is None else None,
+            "error_message": result.get("error")
+        }
+        background_tasks.add_task(log_to_supabase_task, log_payload)
+
         if payload.webhook_url:
             background_tasks.add_task(send_webhook, payload.webhook_url, result)
         return result
 
     tasks = [extract_job_details_openai(u) for u in urls]
     results = await asyncio.gather(*tasks)
+    
+    for res in results:
+        log_payload = {
+            "ip": ip,
+            "device": device,
+            "answered_to": answered_to,
+            "scraped_url": res.get("source_url"),
+            "model_used": "openai",
+            "is_success": res.get("error") is None,
+            "full_result": json.dumps(res, ensure_ascii=False) if res.get("error") is None else None,
+            "error_message": res.get("error")
+        }
+        background_tasks.add_task(log_to_supabase_task, log_payload)
     
     response_payload = {
         "total_processed": len(results),
@@ -445,19 +494,49 @@ async def extract_openai_handler(payload: UnifiedJobRequest, background_tasks: B
     return response_payload
 
 @app.post("/extractl", response_model=Union[JobExtractionResponse, CombinedExtractionResponse])
-async def extract_ollama_handler(payload: UnifiedJobRequest, background_tasks: BackgroundTasks):
+async def extract_ollama_handler(request: Request, payload: UnifiedJobRequest, background_tasks: BackgroundTasks):
+    ip = request.client.host if request.client else "unknown"
+    device = request.headers.get("user-agent", "unknown")
+    answered_to = payload.webhook_url if payload.webhook_url else "direct_response"
+
     urls = payload.target_urls
     if not urls:
         raise HTTPException(status_code=400, detail="Missing target URL(s). Provide 'url' string/array or 'urls' array.")
 
     if len(urls) == 1:
         result = await extract_job_details_ollama(urls[0])
+        
+        log_payload = {
+            "ip": ip,
+            "device": device,
+            "answered_to": answered_to,
+            "scraped_url": urls[0],
+            "model_used": "ollama",
+            "is_success": result.get("error") is None,
+            "full_result": json.dumps(result, ensure_ascii=False) if result.get("error") is None else None,
+            "error_message": result.get("error")
+        }
+        background_tasks.add_task(log_to_supabase_task, log_payload)
+
         if payload.webhook_url:
             background_tasks.add_task(send_webhook, payload.webhook_url, result)
         return result
 
     tasks = [extract_job_details_ollama(u) for u in urls]
     results = await asyncio.gather(*tasks)
+
+    for res in results:
+        log_payload = {
+            "ip": ip,
+            "device": device,
+            "answered_to": answered_to,
+            "scraped_url": res.get("source_url"),
+            "model_used": "ollama",
+            "is_success": res.get("error") is None,
+            "full_result": json.dumps(res, ensure_ascii=False) if res.get("error") is None else None,
+            "error_message": res.get("error")
+        }
+        background_tasks.add_task(log_to_supabase_task, log_payload)
 
     response_payload = {
         "total_processed": len(results),
