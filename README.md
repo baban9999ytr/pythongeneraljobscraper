@@ -46,22 +46,24 @@ camoufox>=0.1.0
 Create a `.env` file in the project root:
 
 ```env
-OPENAI_API_KEY=your_openai_api_key
-
-# Optional Proxy & Scraper APIs
+SUPABASE_URL=
 SCRAPE_DO_KEY=
 SCRAPINGANT_API_KEY=
-SCRAPERAPI_APIKEY=
-PROXY_USER=
-PROXY_PASS=
-
-# Local Ollama Configuration
-OLLAMA_BASE_URL=http://localhost:11434
-
-# Optional Supabase Logging
-SUPABASE_URL=
 SUPABASE_KEY=
-
+SCRAPERAPI_APIKEY=
+TEST=
+SCRAPINGBEE_API_KEY=
+OPENAI_API_KEY=your_openai_api_key
+OLLAMA_BASE_URL=http://localhost:11434
+OPENAI_ADMIN_KEY=
+HUME_API_KEY=
+HUME_API_KEY_BACKUP=
+HF_TOKEN=
+GEMINI_API_KEY=
+GROQ_API_KEY =         
+#these can change
+PORT=8000
+HOST=0.0.0.0
 ```
 
 ### 2. Install Camoufox Browser Binaries
