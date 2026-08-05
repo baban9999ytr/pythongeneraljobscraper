@@ -35,7 +35,6 @@ PORT = int(os.getenv("PORT", 8000))
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = "qwen2.5:7b-instruct"
-PORT=8001
 PROXY_USER = os.getenv("PROXY_USER")
 PROXY_PASS = os.getenv("PROXY_PASS")
 PROXIES = []
