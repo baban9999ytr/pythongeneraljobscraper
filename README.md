@@ -8,7 +8,7 @@ An asynchronous FastAPI microservice designed to fetch, bypass anti-scraping mea
 
 1. **Compliance Notice:** Prior to targeting any domain, ensure your scraping activity complies with the target website's `robots.txt`, Terms of Service (ToS), and relevant local data privacy regulations.
 2. **No Liability:** The authors and contributors of this repository accept no responsibility or liability for any misuse, server overload, IP bans, or legal consequences resulting from the execution of this code. Use this tool responsibly and at your own risk.
-3. **Open Source & License:** This project is open-source software distributed strictly for educational and research purposes. 
+3. **Open Source & License:** This project is open-source software distributed strictly for educational and research purposes.
 
 ---
 
@@ -79,7 +79,7 @@ Install and start Ollama along with the Qwen model:
 
 ```bash
 # Install Ollama
-curl -fsSL https://ollama.com/install.sh | sh
+curl -fsSL [https://ollama.com/install.sh](https://ollama.com/install.sh) | sh
 
 # Start Ollama service in background
 ollama serve &
@@ -122,14 +122,14 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
 
 * **POST** `/extract`
 * **Body:**
+
 ```json
 {
-  "url": "https://example.com/job/123",
-  "webhook_url": "https://your-domain.com/webhook"
+  "url": "[https://example.com/job/123](https://example.com/job/123)",
+  "webhook_url": "[https://your-domain.com/webhook](https://your-domain.com/webhook)"
 }
 
 ```
-
 
 *(Accepts a single string `url`, an array of `url` strings, or a `urls` array).*
 
@@ -137,17 +137,16 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
 
 * **POST** `/extractl`
 * **Body:**
+
 ```json
 {
   "urls": [
-    "https://example.com/job/123",
-    "https://example.com/job/456"
+    "[https://example.com/job/123](https://example.com/job/123)",
+    "[https://example.com/job/456](https://example.com/job/456)"
   ]
 }
 
 ```
-
-
 
 ---
 
@@ -164,20 +163,24 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
   "closing_date": "No Info",
   "summary": "Full-stack development position focusing on Python and FastAPI.",
   "description": "Detailed requirements, responsibilities, and criteria...",
-  "source_url": "https://example.com/job/123",
+  "source_url": "[https://example.com/job/123](https://example.com/job/123)",
   "error": null,
   "raw_text": "Extracted DOM text..."
 }
 
 ```
 
+---
+
 ## Acceptable Use Policy
 
 This tool is intended strictly for:
-- Academic research and data extraction from websites where you have explicit permission or ownership.
-- Automating internal workflow ingestion compliant with site Terms of Service.
+
+* Academic research and data extraction from websites where you have explicit permission or ownership.
+* Automating internal workflow ingestion compliant with site Terms of Service.
 
 **Prohibited Uses:**
-- Scraped data reselling in violation of privacy regulations (GDPR, KVKK, etc.).
-- Bypassing paywalls or security infrastructure to perform Denial of Service (DoS) attacks.
-- Automated extraction from platforms that explicitly prohibit automated parsing in their `robots.txt` or Terms of Service.
+
+* Scraped data reselling in violation of privacy regulations (GDPR, KVKK, etc.).
+* Bypassing paywalls or security infrastructure to perform Denial of Service (DoS) attacks.
+* Automated extraction from platforms that explicitly prohibit automated parsing in their `robots.txt` or Terms of Service.
