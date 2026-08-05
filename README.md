@@ -8,7 +8,7 @@ An asynchronous FastAPI microservice designed to fetch, bypass anti-scraping mea
 
 1. **Compliance Notice:** Prior to targeting any domain, ensure your scraping activity complies with the target website's `robots.txt`, Terms of Service (ToS), and relevant local data privacy regulations.
 2. **No Liability:** The authors and contributors of this repository accept no responsibility or liability for any misuse, server overload, IP bans, or legal consequences resulting from the execution of this code. Use this tool responsibly and at your own risk.
-3. **Open Source & License:** This project is open-source software distributed strictly for educational and research purposes.
+3. **Open Source & License:** This project is open-source software distributed strictly for educational and research purposes. 
 
 ---
 
