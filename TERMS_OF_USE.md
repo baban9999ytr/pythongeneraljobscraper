@@ -1,4 +1,4 @@
-## ACCEPTABLE USE & LIABILITY WAIVER
+# ACCEPTABLE USE & LIABILITY WAIVER
 
 1. DUAL-USE SOFTWARE NOTICE:
    This software is an analytical microservice framework designed solely for internal data parsing, authorized web scraping, and educational research.
