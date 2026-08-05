@@ -1,4 +1,22 @@
 typeshi.py
+
+aaaaa.rar
+aaaa.rar
+
+# Dependencies
+node_modules/
+
+# Python cache & build files
+__pycache__/
+*.pyc
+
+# Environment & credentials
+.env
+
+# Temporary archives
+*.rar
+*.zip
+
 .env
 __pycache__/
 # Byte-compiled / optimized / DLL files
