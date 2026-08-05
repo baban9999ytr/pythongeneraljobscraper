@@ -30,10 +30,12 @@ SCRAPE_DO_KEY = os.getenv("SCRAPE_DO_KEY")
 SCRAPINGANT_API_KEY = os.getenv("SCRAPINGANT_API_KEY")
 SCRAPERAPI_KEY = os.getenv("SCRAPERAPI_APIKEY")
 SCRAPINGBEE_KEY = os.getenv("SCRAPINGBEE_API_KEY")
+HOST = os.getenv("HOST", "0.0.0.0")
+PORT = int(os.getenv("PORT", 8000)) 
 
 OLLAMA_BASE_URL = os.getenv("OLLAMA_BASE_URL", "http://localhost:11434")
 OLLAMA_MODEL = "qwen2.5:7b-instruct"
-
+PORT=8001
 PROXY_USER = os.getenv("PROXY_USER")
 PROXY_PASS = os.getenv("PROXY_PASS")
 PROXIES = []
@@ -548,6 +550,8 @@ async def extract_ollama_handler(request: Request, payload: UnifiedJobRequest, b
 
     return response_payload
 
+
+import uvicorn
+
 if __name__ == "__main__":
-    import uvicorn
-    uvicorn.run("main:app", host="0.0.0.0", port=8001, reload=True)
+    uvicorn.run("main:app", host=HOST, port=PORT, workers=2, log_level="info")
