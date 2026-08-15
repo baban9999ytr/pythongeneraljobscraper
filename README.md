@@ -14,10 +14,10 @@ An asynchronous FastAPI microservice designed to fetch, bypass anti-scraping mea
 
 ## Features
 
-* **Dual Extraction Engines:** Switch between OpenAI API (`/extract`) and local Ollama execution (`/extractl`).
-* **Resilient Network Architecture:** Fallback sequence incorporating `curl_cffi` (impersonating Chrome TLS fingerprints), DataImpulse proxies, Scrape.do, ScrapingAnt, ScraperAPI, and headful/headless browser emulation via `Camoufox`.
-* **Structured JSON Output:** Enforces JSON Schema responses for job attributes (`title`, `company`, `location`, `sector`, `dates`, `summary`, `description`).
-* **Async Concurrency & Logging:** Controlled via semaphore concurrency limits and background execution tasks (Webhook dispatching & Supabase audit logging).
+- **Dual Extraction Engines:** Switch between OpenAI API (`/extract`) and local Ollama execution (`/extractl`).
+- **Resilient Network Architecture:** Fallback sequence incorporating `curl_cffi` (impersonating Chrome TLS fingerprints), DataImpulse proxies, Scrape.do, ScrapingAnt, ScraperAPI, and headful/headless browser emulation via `Camoufox`.
+- **Structured JSON Output:** Enforces JSON Schema responses for job attributes (`title`, `company`, `location`, `sector`, `dates`, `summary`, `description`).
+- **Async Concurrency & Logging:** Controlled via semaphore concurrency limits and background execution tasks (Webhook dispatching & Supabase audit logging).
 
 ---
 
@@ -60,7 +60,7 @@ HUME_API_KEY=
 HUME_API_KEY_BACKUP=
 HF_TOKEN=
 GEMINI_API_KEY=
-GROQ_API_KEY =         
+GROQ_API_KEY =
 #these can change
 PORT=8000
 HOST=0.0.0.0
@@ -117,28 +117,27 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
 
 ### Health Check
 
-* **GET** `/health`
-* **Response:** `{"status": "online", "timestamp": 1720000000.0}`
+- **GET** `/health`
+- **Response:** `{"status": "online", "timestamp": 1720000000.0}`
 
 ### Extract via OpenAI (`/extract`)
 
-* **POST** `/extract`
-* **Body:**
+- **POST** `/extract`
+- **Body:**
 
 ```json
 {
   "url": "[https://example.com/job/123](https://example.com/job/123)",
   "webhook_url": "[https://your-domain.com/webhook](https://your-domain.com/webhook)"
 }
-
 ```
 
-*(Accepts a single string `url`, an array of `url` strings, or a `urls` array).*
+_(Accepts a single string `url`, an array of `url` strings, or a `urls` array)._
 
 ### Extract via Local Ollama (`/extractl`)
 
-* **POST** `/extractl`
-* **Body:**
+- **POST** `/extractl`
+- **Body:**
 
 ```json
 {
@@ -147,7 +146,6 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
     "[https://example.com/job/456](https://example.com/job/456)"
   ]
 }
-
 ```
 
 ---
@@ -169,7 +167,6 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
   "error": null,
   "raw_text": "Extracted DOM text..."
 }
-
 ```
 
 ---
@@ -178,11 +175,11 @@ PYTHONUNBUFFERED=1 pm2 start main.py --name "job-scraper" --interpreter python3
 
 This tool is intended strictly for:
 
-* Academic research and data extraction from websites where you have explicit permission or ownership.
-* Automating internal workflow ingestion compliant with site Terms of Service.
+- Academic research and data extraction from websites where you have explicit permission or ownership.
+- Automating internal workflow ingestion compliant with site Terms of Service.
 
 **Prohibited Uses:**
 
-* Scraped data reselling in violation of privacy regulations (GDPR, KVKK, etc.).
-* Bypassing paywalls or security infrastructure to perform Denial of Service (DoS) attacks.
-* Automated extraction from platforms that explicitly prohibit automated parsing in their `robots.txt` or Terms of Service.
+- Scraped data reselling in violation of privacy regulations (GDPR, KVKK, etc.).
+- Bypassing paywalls or security infrastructure to perform Denial of Service (DoS) attacks.
+- Automated extraction from platforms that explicitly prohibit automated parsing in their `robots.txt` or Terms of Service.
